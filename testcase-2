@@ -1,0 +1,50 @@
+from selenium import webdriver
+
+def parse_and_filter_transactions(driver):
+ 
+    """parse_and_filter_transactions function"""
+
+    transaction_table = driver.find_element_by_css_selector('.transaction-table')
+    transaction_rows = transaction_table.find_elements_by_css_selector('tr')
+
+    transaction_hashes = []
+    for transaction_row in transaction_rows:
+        input_count_string = transaction_row.text.split(' ')[4]
+        output_count_string = transaction_row.text.split(' ')[5]
+
+        input_count = int(input_count_string.split(' ')[0])
+        output_count = int(output_count_string.split(' ')[0])
+
+        if input_count == 1 and output_count == 2:
+            transaction_hashes.append(transaction_row.find_element_by_css_selector('td:nth-child(1) a').get_attribute('href'))
+
+    return transaction_hashes
+
+def main():
+    """Main function."""
+
+    # Create a new Chrome webdriver 
+    driver = webdriver.Chrome()
+
+    # Navigate to the transaction explorer page
+    driver.get('https://blockstream.info/block/000000000000000000076c036ff5119e5a5a74df77abf64203473364509f7732')
+
+    try:
+        # Parse and filter the transactions
+        transaction_hashes = parse_and_filter_transactions(driver)
+
+        # Print the transaction hashes
+        for transaction_hash in transaction_hashes:
+            print(transaction_hash)
+
+    except Exception as e:
+        # Handle any exceptions
+        print(e)
+
+    finally:
+        # Close the webdriver instance
+        driver.quit()
+
+#to exectue code
+if __name__ == '__main__':
+    main()
