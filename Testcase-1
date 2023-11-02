@@ -1,0 +1,21 @@
+from selenium import webdriver
+
+def test_transaction_explorer_heading():
+    
+    # Create a new Chrome webdriver 
+    driver = webdriver.Chrome()
+
+    # Navigate to the transaction explorer page
+    driver.get('https://blockstream.info/block/000000000000000000076c036ff5119e5a5a74df77abf64203473364509f7732')
+
+    # Get the transaction list section heading
+    transaction_list_section_heading = driver.find_element_by_css_selector('.transaction-list-section h2')
+
+    # Assert that the heading is "25 of 2875 Transactions"
+    assert transaction_list_section_heading.text == '25 of 2875 Transactions'
+
+    driver.quit()
+
+# Run the test case
+if __name__ == '__main__':
+    test_transaction_explorer_heading()
